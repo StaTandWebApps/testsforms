@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations Enquêteur</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            background-color: #9edef4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            margin: 50px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .info p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            margin-top: 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Informations de l'Enquêteur</h2>
+    <div class="container">
+        <div class="info" id="info"></div>
+    </div>
+    <button onclick="telechargerPDF()">Télécharger en PDF</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const data = JSON.parse(localStorage.getItem("formData"));
+
+            if (data) {
+                document.getElementById("info").innerHTML = `
+                    <p><strong>Code Enquêteur :</strong> ${data.code_enqueteur}</p>
+                    <p><strong>Nom :</strong> ${data.nom_enqueteur}</p>
+                    <p><strong>Prénoms :</strong> ${data.prenom_enqueteur}</p>
+                    <p><strong>Statut :</strong> ${data.statut_enqueteur}</p>
+                `;
+            } else {
+                document.getElementById("info").innerHTML = "<p>Aucune donnée trouvée.</p>";
+            }
+        });
+
+        function telechargerPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const data = JSON.parse(localStorage.getItem("formData"));
+            if (data) {
+                doc.text("Informations de l'Enquêteur", 10, 10);
+                doc.text(`Code Enquêteur: ${data.code_enqueteur}`, 10, 20);
+                doc.text(`Nom: ${data.nom_enqueteur}`, 10, 30);
+                doc.text(`Prénoms: ${data.prenom_enqueteur}`, 10, 40);
+                doc.text(`Statut: ${data.statut_enqueteur}`, 10, 50);
+
+                doc.save("enqueteur_info.pdf");
+            } else {
+                alert("Aucune donnée à exporter !");
+            }
+        }
+    </script>
+
+</body>
+</html>
